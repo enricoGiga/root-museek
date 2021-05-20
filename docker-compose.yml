@@ -1,0 +1,98 @@
+version: '2'
+services:
+  discovery:
+    container_name: discovery
+    build:
+      context: discovery
+      dockerfile: Dockerfile
+    image: giga/discovery:0.0.1-SNAPSHOT
+    ports:
+      - 127.0.0.1:8761:8761
+    networks:
+      - spring-cloud-network
+  config:
+    container_name: config
+    build:
+      context: config
+      dockerfile: Dockerfile
+    image: giga/config:0.0.1-SNAPSHOT
+    volumes:
+      - ./config-data:/var/config-data
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://discovery:8761/eureka
+        -Dspring.cloud.config.server.native.searchLocations=/var/config-data
+
+    depends_on:
+      - discovery
+
+    ports:
+      - 127.0.0.1:8888:8888
+    networks:
+      - spring-cloud-network
+
+  postgres_db:
+    image: postgres:latest
+    restart: always
+    container_name: postgres_db
+    volumes:
+      - psql-volume:/var/lib/postgresql/data
+    #    networks:
+    #      elemento:
+    #        ipv4_address: 172.26.1.2
+    ports:
+      - target: 5432
+        published: 5433
+        protocol: tcp
+        mode: host
+    environment:
+      - POSTGRES_USER=enrico
+      - POSTGRES_DB=museek_db
+      - POSTGRES_PASSWORD=enrico
+    networks:
+      - spring-cloud-network
+
+  museek:
+    container_name: museek
+    build:
+      context: museek
+      dockerfile: Dockerfile
+    image: giga/museek:0.0.1-SNAPSHOT
+    ports:
+      - 8080:8080
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://discovery:8761/eureka
+    depends_on:
+      - discovery
+    networks:
+      - spring-cloud-network
+
+  museek_gateway:
+    container_name: museek_gateway
+    build:
+      context: museek_gateway
+      dockerfile: Dockerfile
+    image: giga/museek_gateway:0.0.1-SNAPSHOT
+    ports:
+      - 127.0.0.1:8090:8090
+    environment:
+
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://discovery:8761/eureka
+        -DMUSEEK_URL=http://museek:8080
+        -DHOST_PORT=http://127.0.0.1:8090
+        -DPORT=8090
+
+    networks:
+      - spring-cloud-network
+    depends_on:
+      - discovery
+      - config
+      - postgres_db
+      - museek
+volumes:
+  psql-volume:
+networks:
+  spring-cloud-network:
+    driver: bridge

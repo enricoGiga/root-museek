@@ -1,0 +1,15 @@
+version: "3.5"
+services:
+  discovery:
+    container_name: discovery
+    build:
+      context: discovery
+      dockerfile: Dockerfile
+    image: giga/discovery:0.0.1-SNAPSHOT
+    ports:
+      - 127.0.0.1:8761:8761
+    networks:
+      - spring-cloud-network
+networks:
+  spring-cloud-network:
+    name: cloud-network

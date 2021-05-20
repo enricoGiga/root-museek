@@ -1,0 +1,20 @@
+
+spring:
+  datasource:
+
+    url: jdbc:postgresql://postgres_db:5433/museek_db
+    username: enrico
+    password: enrico
+  jpa:
+    show-sql: true
+    open-in-view: false
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    generate-ddl: true
+
+    hibernate:
+      ddl-auto: create
+application:
+  jwt:
+    secretKey: securesecuresecuresecuresecuresecuresecuresecure
+    tokenPrefix: Bearer
+    tokenExpirationDateInMs: 900000 #10000 #86400000

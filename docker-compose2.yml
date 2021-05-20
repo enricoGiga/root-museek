@@ -1,0 +1,33 @@
+version: "3.5"
+services:
+ discovery:
+   container_name: discovery
+   build:
+     context: discovery
+     dockerfile: Dockerfile
+   image: giga/discovery:0.0.1-SNAPSHOT
+   ports:
+     - 127.0.0.1:8761:8761
+   networks:
+     - spring-cloud-network
+ config:
+   container_name: config
+   build:
+     context: config
+     dockerfile: Dockerfile
+   image: giga/config:0.0.1-SNAPSHOT
+   volumes:
+     - ./config-data:/var/config-data
+   environment:
+     - JAVA_OPTS=
+       -DEUREKA_SERVER=http://discovery:8761/eureka
+       -Dspring.cloud.config.server.native.searchLocations=/var/config-data
+
+   depends_on:
+     - discovery
+   ports:
+     - 127.0.0.1:8888:8888
+networks:
+  spring-cloud-network:
+    name: cloud-network
+

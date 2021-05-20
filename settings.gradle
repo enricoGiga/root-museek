@@ -1,0 +1,5 @@
+rootProject.name = 'museek-ecosistem'
+include 'config'
+include 'discovery'
+include 'museek'
+include 'museek_gateway'

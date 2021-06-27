@@ -47,7 +47,7 @@ services:
         mode: host
     environment:
       - POSTGRES_USER=enrico
-      - POSTGRES_DB=museek_db
+      - POSTGRES_DB=museek_gateway_db
       - POSTGRES_PASSWORD=enrico
     networks:
       - spring-cloud-network
@@ -81,7 +81,7 @@ services:
       - JAVA_OPTS=
         -Dapplication.jwt.secretKey=securesecuresecuresecuresecuresecuresecuresecure
       - PORT=8090
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres_db:5432/museek_db
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres_db:5432/museek_gateway_db
       - SPRING_DATASOURCE_PASSWORD=enrico
       - SPRING_DATASOURCE_USERNAME=enrico
       - MUSEEK_URL=http://museek:8080

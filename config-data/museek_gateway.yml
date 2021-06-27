@@ -2,7 +2,7 @@
 spring:
   datasource:
 
-    url: jdbc:postgresql://postgres_db:5433/museek_db
+    url: jdbc:postgresql://postgres_db:5433/museek_gateway_db
     username: enrico
     password: enrico
   jpa:
